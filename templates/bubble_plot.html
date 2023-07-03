@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Colombian Domestic Violence</title>
+    <style>
+    body {
+        background-image: url('static/img/back.jpg');
+        background-repeat: no-repeat;
+        background-position: center;
+        background-attachment: fixed;
+        background-size: cover;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+    }
+
+    .grid-container {
+        display: grid;
+        grid-template-columns: auto auto auto;
+        padding: 10px;
+    }
+
+    .grid-item {
+        padding: 20px;
+        font-size: 30px;
+        text-align: center;
+    }
+
+    .box {
+        width: 120px;
+        height: 30px;
+        border: 1px solid #999;
+        font-size: 18px;
+        color: #1c87c9;
+        background-color: #eee;
+        border-radius: 5px;
+        box-shadow: 4px 4px #ccc;
+    }
+
+    #dropdownMetric {
+        width: auto;
+        height: auto;
+    }
+
+    #dropdownMetric2 {
+        width: auto;
+        height: auto;
+    }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/danfojs@1.1.2/lib/bundle.min.js"></script>
+    <script src='https://cdn.plot.ly/plotly-2.20.0.min.js'></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+    <h1>Investigating Colombian domestic violence</h1>
+    <p>The following graph will show some metrics on the y axis and always the number of domestic violence cases on the x axis.</p>
+    <p>Another metric will be coded by the size of the bubbles.</p>
+    <p>Hover over them to see all the information.</p>
+    <div class="grid-container">
+        <div class="grid-item">
+            <label for="metric">Choose a metric for the y axis:</label>
+            <select class="box" name="metric" id="dropdownMetric" onchange="changeData(this.value, this.text);">
+                <option selected="selected" value="gini">Gini coefficient</option>
+            </select>
+            <div class="grid-item"><label for="metric">Choose a bubble size metric (z):</label>
+                <select class="box" name="bubbleMetric" id="dropdownMetric2" onchange="changeBubbleSize(this.value);">
+                    <option selected="selected" value="qhousing">Quality of housing</option>
+                </select></div>
+        </div>
+        <div id="graph" class="grid-item">
+            <script src="static/js/bubble_plot.js"></script>
+        </div>
+    </div>
+</body>
+
+</html>

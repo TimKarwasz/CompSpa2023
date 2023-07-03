@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Interactive choropleth map example</title>
+    <style type="text/css">
+    .grid-container {
+        display: grid;
+        grid-template-columns: auto auto auto;
+        padding: 10px;
+    }
+
+    .grid-item {
+        padding: 20px;
+        font-size: 30px;
+        text-align: center;
+    }
+
+    .box {
+        width: 120px;
+        height: 30px;
+        border: 1px solid #999;
+        font-size: 18px;
+        color: #1c87c9;
+        background-color: #eee;
+        border-radius: 5px;
+        box-shadow: 4px 4px #ccc;
+    }
+
+    #dropdownMetric {
+        width: auto;
+        height: auto;
+    }
+    </style>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://d3js.org/topojson.v2.min.js"></script>
+</head>
+
+<body>
+    <h1>Domestic Violence in Colombia </h1>
+    <div class="grid-container">
+        <div class="grid-item">
+        </div>
+        <div class="grid-item">
+            <svg width="550" height="550" id="map"></svg>
+            <script type="text/javascript" src="static/js/map.js"></script>
+            <p><span id="metric"></span><span id="dep"></span><span id="hint"></span></p>
+            <p><span id="cityName"></span><span id="cityPopulation"></span></p>
+            <label for="metric">Choose a metric for the map:</label>
+            <select class="box" name="metric" id="dropdownMetric" onchange="changeData(this.value);">
+                <option selected="selected" value="d.properties.norm">Domestic Violence Cases</option>
+                <option value="d.properties.population">Population</option>
+                <option value="d.properties.AREA">Area</option>
+            </select>
+            <p></p>
+            <label for="metric">Choose a projection for the map:</label>
+            <select class="box" name="metric" id="dropdownMetric2" onchange="changeProjection(this.value);">
+                <option selected="selected" value="geoMercator">Mercator</option>
+                <option value="geoAzimuthalEqualArea">Azimuthal Equal Area</option>
+                <option value="geoTransverseMercator">Transverse Mercator</option>
+                <option value="geoAlbers">Albers</option>
+            </select>
+            <p></p>
+            <label for="metric">Choose the amount of cities:</label>
+            <select class="box" name="metric" id="dropdownMetric3" onchange="changeCities(this.value);">
+                <option selected="selected" value="713">All</option>
+                <option value="400">400 most populated</option>
+                <option value="200">200 most populated</option>
+                <option value="100">100 most populated</option>
+                <option value="50">50 most populated</option>
+                <option value="none">None</option>
+            </select>
+        </div>
+        <div class="grid-item">
+        </div>
+    </div>
+    <div class="grid-container">
+    </div>
+</body>
+
+</html>
