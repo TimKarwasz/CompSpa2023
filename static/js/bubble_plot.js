@@ -7,9 +7,7 @@ const dropdownMetric = document.getElementById("dropdownMetric");
 // change the values here, to add new Metrics (The value must be the name of a column in data.csv)
 const dropdownSelections = {
     "Number of households in dataset for region": "Nhh",
-    "% population in urban areas": "urban",
-    "Mean International Wealth Index (IWI) score of region": "iwi",
-    "% poor households (with IWI value under 35)": "iwipov35"
+    "% population in urban areas": "urban"
 }
 /*
 "% poor households (with IWI value under 70)": "iwipov70",

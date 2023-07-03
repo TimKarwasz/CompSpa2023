@@ -68,6 +68,7 @@ const requestData7 = async () => {
         })
         .attr("d", pathGen);
 
+    /*
     map.append("g")
         .attr("class", "city")
         .style("fill", "orange")
@@ -91,7 +92,7 @@ const requestData7 = async () => {
                 .select("text").remove();
         })
         .attr("d", pathGen);
-
+		*/
 
 }
 
