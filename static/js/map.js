@@ -70,12 +70,12 @@ const requestData7 = async () => {
 
     map.append("g")
         .attr("class", "city")
-        .style("fill", "red")
+        .style("fill", "orange")
         .selectAll("district")
         .data(globalCities)
         .enter().append("path")
         .on("mouseover", function(d) {
-            d3.select(this).style("stroke", "red");
+            d3.select(this).style("stroke", "black");
             d3.select("#cityName")
                 .append("text")
                 .text(d.properties.cityName + ": ");
@@ -179,12 +179,12 @@ function drawCities(value) {
 
     map.append("g")
             .attr("class", "city")
-            .style("fill", "red")
+            .style("fill", "orange")
             .selectAll("district")
             .data(globalsortedCities.slice(0, value))
             .enter().append("path")
             .on("mouseover", function(d) {
-                d3.select(this).style("stroke", "red");
+                d3.select(this).style("stroke", "black");
                 d3.select("#cityName")
                     .append("text")
                     .text(d.properties.cityName + ": ");

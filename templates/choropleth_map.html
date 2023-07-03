@@ -31,6 +31,16 @@
         width: auto;
         height: auto;
     }
+
+    #dropdownMetric2 {
+        width: auto;
+        height: auto;
+    }
+
+    #dropdownMetric3 {
+        width: auto;
+        height: auto;
+    }
     </style>
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="https://d3js.org/topojson.v2.min.js"></script>
@@ -50,7 +60,8 @@
             <select class="box" name="metric" id="dropdownMetric" onchange="changeData(this.value);">
                 <option selected="selected" value="d.properties.norm">Domestic Violence Cases</option>
                 <option value="d.properties.population">Population</option>
-                <option value="d.properties.AREA">Area</option>
+                <option value="d.properties.gini">Gini coefficent</option>
+                <option value="d.properties.iwipov35">% poor households (with IWI value under 35)</option>
             </select>
             <p></p>
             <label for="metric">Choose a projection for the map:</label>

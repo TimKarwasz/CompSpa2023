@@ -34,8 +34,6 @@ const dropdownBubbleSelections = {
     "Mean years education of women aged 20+": "womedyr20",
     "Mean years education of men aged 20+": "menedyr20",
     "Percentage of women in paid employment": "workwom",
-    "Mean age difference partners (husband-wife)" :"agedifmar",
-    "Infant mortality rate": "infmort"
 }
 
 /*
@@ -85,8 +83,8 @@ var graphData = {
 // placeholder for the layout, so that we dont need to create a new one all the time
 var template_layout = {
     showlegend: false,
-    height: 700,
-    width: 700,
+    height: 600,
+    width: 600,
     title: {
         text: '',
         font: {
@@ -96,7 +94,7 @@ var template_layout = {
     },
     xaxis: {
         title: {
-            text: 'Domestic Violence Cases per 1000 population',
+            text: 'Domestic Violence Cases per 1000 citizens',
             font: {
                 family: 'Courier New, monospace',
                 size: 18,
@@ -181,13 +179,13 @@ function defaultLayout() {
     graphData["text"] = csvData["dep"]["$data"];
 
     // set default bubble size
-    graphData["marker"]["size"] = scaleDataValuesAndReturn(csvData["qhousing"]["$data"]);
+    graphData["marker"]["size"] = scaleDataValuesAndReturn(csvData["infmort"]["$data"]);
 
     // save the original value in the customdata array
-    graphData["customdata"] = csvData["qhousing"]["$data"];
+    graphData["customdata"] = csvData["infmort"]["$data"];
 
     // set default text for the bubble size metric in the hoverbox
-    graphData["z"] = 'Quality of housing';
+    graphData["z"] = 'Infant mortality rate';
 
     // set the color of the bubbles based on their size
     graphData["marker"]["color"] = returnColorArray(graphData["marker"]["size"]);

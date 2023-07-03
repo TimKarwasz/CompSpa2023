@@ -4,17 +4,6 @@
 <head>
     <title>Colombian Domestic Violence</title>
     <style>
-    body {
-        background-image: url('static/img/back.jpg');
-        background-repeat: no-repeat;
-        background-position: center;
-        background-attachment: fixed;
-        background-size: cover;
-        -webkit-background-size: cover;
-        -moz-background-size: cover;
-        -o-background-size: cover;
-    }
-
     .grid-container {
         display: grid;
         grid-template-columns: auto auto auto;
@@ -56,18 +45,18 @@
 
 <body>
     <h1>Investigating Colombian domestic violence</h1>
-    <p>The following graph will show some metrics on the y axis and always the number of domestic violence cases on the x axis.</p>
+    <p>The following graph will show a user selected metric on the y axis and always the number of domestic violence cases per 1000 citizens on the x axis.</p>
     <p>Another metric will be coded by the size of the bubbles.</p>
-    <p>Hover over them to see all the information.</p>
+    <p>Hover over the bubbles to see all the information.</p>
     <div class="grid-container">
         <div class="grid-item">
             <label for="metric">Choose a metric for the y axis:</label>
             <select class="box" name="metric" id="dropdownMetric" onchange="changeData(this.value, this.text);">
                 <option selected="selected" value="gini">Gini coefficient</option>
             </select>
-            <div class="grid-item"><label for="metric">Choose a bubble size metric (z):</label>
+            <div class="grid-item"><label for="metric">Choose a bubble size metric:</label>
                 <select class="box" name="bubbleMetric" id="dropdownMetric2" onchange="changeBubbleSize(this.value);">
-                    <option selected="selected" value="qhousing">Quality of housing</option>
+                    <option selected="selected" value="infmort">Infant mortality rate</option>
                 </select></div>
         </div>
         <div id="graph" class="grid-item">
