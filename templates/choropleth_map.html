@@ -44,6 +44,9 @@
     </style>
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="https://d3js.org/topojson.v2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
 </head>
 
 <body>
@@ -79,6 +82,13 @@
                 <option value="100">100 most populated</option>
                 <option value="50">50 most populated</option>
                 <option selected="selected"value="none">None</option>
+            </select>
+            <p></p>
+            <label for="metric">Choose a color scale for the map:</label>
+            <select class="box" name="metric" id="dropdownMetric4" onchange="changeColorScale(this.value);">
+                <option selected="selected" value="d3.interpolateOrRd">OrRd</option>
+                <option value="d3.interpolateSinebow">Sinebow</option>
+                <option value="d3.interpolateViridis">Viridis</option>
             </select>
         </div>
         <div class="grid-item">

@@ -1,13 +1,19 @@
 // Author : Tim Karwasz
 // This script uses plotly to draw grpahs. Ploty is based on D3
 
+
+var dropdownMetric = document.getElementById("dropdownMetric");
 // These consts are used to dynamically create the dropdown metric list
 // the key from the object is displayed on the page and the value is used to get the data from the csv
-const dropdownMetric = document.getElementById("dropdownMetric");
 // change the values here, to add new Metrics (The value must be the name of a column in data.csv)
+// see examples below
 const dropdownSelections = {
     "Number of households in dataset for region": "Nhh",
-    "% population in urban areas": "urban"
+    "% population in urban areas": "urban",
+    "Mean years education of adults aged 20+": "edyr20",
+    "Mean years education of women aged 20+": "womedyr20",
+    "Mean years education of men aged 20+": "menedyr20",
+    "Percentage of women in paid employment": "workwom"
 }
 /*
 "% poor households (with IWI value under 70)": "iwipov70",
@@ -25,7 +31,7 @@ const dropdownSelections = {
 
 
 // same goes for the bubble size dropdown list
-const dropdownBubble = document.getElementById("dropdownMetric2");
+var dropdownBubble = document.getElementById("dropdownMetric2");
 // change the values here, to add new bubble size metrics (The value must be the name of a column in data.csv)
 const dropdownBubbleSelections = {
     "Mean years education of adults aged 20+": "edyr20",
@@ -63,9 +69,9 @@ var graphData = {
     z: [],
     customdata: [],
     hovertemplate: '<i>%{xaxis.title.text}</i>: %{x:.2f}<extra></extra>' +
-                   '<br><i>%{yaxis.title.text}</i>: %{y:.2f}' +
-                   '<br><i>%{data.z}</i>: %{customdata:.2f}' +
-                   '<br><i>Department</i>: %{text}',
+        '<br><i>%{yaxis.title.text}</i>: %{y:.2f}' +
+        '<br><i>%{data.z}</i>: %{customdata:.2f}' +
+        '<br><i>Department</i>: %{text}',
     text: [],
     mode: 'markers',
     marker: {
@@ -77,6 +83,43 @@ var graphData = {
     }
 };
 
+var histoData = {
+    x: [],
+    type: 'histogram',
+};
+
+var histo_layout = {
+    showlegend: false,
+    height: 600,
+    width: 600,
+    title: {
+        text: '',
+        font: {
+            family: 'Courier New, monospace',
+            size: 20
+        },
+    },
+    xaxis: {
+        title: {
+            text: 'Gini coefficent',
+            font: {
+                family: 'Courier New, monospace',
+                size: 18,
+                color: '#7f7f7f'
+            }
+        },
+    },
+    yaxis: {
+        title: {
+            text: 'Frequency',
+            font: {
+                family: 'Courier New, monospace',
+                size: 18,
+                color: '#7f7f7f'
+            }
+        }
+    }
+};
 
 // placeholder for the layout, so that we dont need to create a new one all the time
 var template_layout = {
@@ -191,6 +234,13 @@ function defaultLayout() {
     // draw the default plot
     Plotly.newPlot('graph', [graphData], template_layout);
 
+    // add default data for histogram
+    histoData["x"] = csvData["norm"]["$data"];
+
+    // draw histogram
+    Plotly.newPlot('histo', [histoData], histo_layout);
+
+    // at the moment only used for debugging in the web console
     myPlot.on('plotly_hover', function(data) {
 
         // find the data which can be accessed
@@ -203,13 +253,13 @@ function defaultLayout() {
 
 
 // function to switch out data, it gets the current value from the dropdown menu on change and then creates the new graph
-function changeData(value,b) {
+function changeData(value, b) {
 
     // add new data for y to the graphData
     graphData.y = csvData[value]["$data"];
 
     // add new y axis label
-    var dropdown = document.getElementById("dropdownMetric"); 
+    var dropdown = document.getElementById("dropdownMetric");
     template_layout["yaxis"]["title"]["text"] = dropdown.options[dropdown.selectedIndex].text;
 
     // and a new title
@@ -218,6 +268,16 @@ function changeData(value,b) {
 
     // update the graph
     Plotly.react('graph', [graphData], template_layout);
+
+    // add new data to the histogram
+    histoData["x"] = csvData[value]["$data"];
+
+    // add new y axis label for the histogram
+    histo_layout["xaxis"]["title"]["text"] = dropdown.options[dropdown.selectedIndex].text;
+    
+    // update the histo
+    Plotly.react('histo', [histoData], histo_layout);
+
 }
 
 
@@ -234,11 +294,20 @@ function changeBubbleSize(value) {
     graphData["marker"]["color"] = returnColorArray(graphData["marker"]["size"]);
 
     // update the bubble size info in the hoverbox
-    var dropdown = document.getElementById("dropdownMetric2"); 
+    var dropdown = document.getElementById("dropdownMetric2");
     graphData["z"] = dropdown.options[dropdown.selectedIndex].text;
 
     // update the graph
     Plotly.react('graph', [graphData], template_layout);
+
+    // add new data to the histogram
+    histoData["x"] = csvData[value]["$data"];
+
+    // add new y axis label for the histogram
+    histo_layout["yaxis"]["title"]["text"] = dropdown.options[dropdown.selectedIndex].text;
+
+    // update the histo
+    Plotly.react('histo', [histoData], histo_layout);
 }
 
 

@@ -1,21 +1,25 @@
 const map = d3.select("#map");
 
-const colorScale = d3.scaleThreshold()
-    .domain([2, 4, 6, 8, 10, 12, 14, 16, 18, 20])
-    .range(["#fff7ec", "#fee9cb", "#fdd8a9", "#fdc28c", "#fca16d", "#f67b52", "#e65339", "#ce2619", "#ab0604", "#7f0000"]);
-
+// placeholder for the cities
 var globalCities = [];
+
+// placeholder for the sorted cities
 var globalsortedCities = [];
+
+// the following code is the default when the site is loaded
+// is reads the data and then draws the basic map
 var globalPath;
-const requestData7 = async () => {
+const requestData = async () => {
     // colombia_data
     const colombiaData = await d3.json("/static/data/colombia_final.geojson");
 
+    // define projection
     var projection = d3.geoMercator().fitSize([500, 500], colombiaData);
     var pathGen = d3.geoPath().projection(projection);
     globalPath = pathGen;
     //console.log(colombiaData.features[0])
     var countries = [];
+    // differentiate between countries and cities
     Object.keys(colombiaData.features).forEach(key => {
         if (colombiaData.features[key]["geometry"]["type"] === "Point") {
             globalCities.push(colombiaData.features[key]);
@@ -25,26 +29,23 @@ const requestData7 = async () => {
 
     });
 
-    const scoreMin = d3.min(colombiaData.features, d => d.properties.norm);
-    const scoreMax = d3.max(colombiaData.features, d => d.properties.norm);
+    // define a color scale based on min and max values for the metric
+    var scoreMin = d3.min(colombiaData.features, d => d.properties.norm);
+    var scoreMax = d3.max(colombiaData.features, d => d.properties.norm);
 
-    const newColorScale = d3.scaleSequential([scoreMin, scoreMax], d3.interpolateViridis);
-
-    const colorScale = d3.scaleThreshold()
-        .domain([2, 4, 6, 8, 10, 12, 14, 16, 18, 20])
-        .range(["#fff7ec", "#fee9cb", "#fdd8a9", "#fdc28c", "#fca16d", "#f67b52", "#e65339", "#ce2619", "#ab0604", "#7f0000"])
+    var newColorScale = d3.scaleSequential([scoreMin, scoreMax], d3.interpolateOrRd);
 
     var dropdown = document.getElementById("dropdownMetric");
 
     globalsortedCities = globalCities.sort(comparePopulation);
 
-
+    // draw countries
     map.selectAll("path").data(countries)
         .enter()
         .append("path")
         .attr("class", "district")
         .style("fill", d => newColorScale(d.properties.norm))
-        .style("stroke", "none")
+        .style("stroke", "black")
         .on("mouseover", function(d) {
             d3.select(this).style("stroke", "red");
             d3.select("#hint")
@@ -58,7 +59,7 @@ const requestData7 = async () => {
                 .text(dropdown.options[dropdown.selectedIndex].text + " in ")
         })
         .on("mouseout", function(d) {
-            d3.select(this).style("stroke", "none");
+            d3.select(this).style("stroke", "black");
             d3.select("#hint")
                 .select("text").remove();
             d3.select("#dep")
@@ -68,47 +69,28 @@ const requestData7 = async () => {
         })
         .attr("d", pathGen);
 
-    /*
-    map.append("g")
-        .attr("class", "city")
-        .style("fill", "orange")
-        .selectAll("district")
-        .data(globalCities)
-        .enter().append("path")
-        .on("mouseover", function(d) {
-            d3.select(this).style("stroke", "black");
-            d3.select("#cityName")
-                .append("text")
-                .text(d.properties.cityName + ": ");
-            d3.select("#cityPopulation")
-                .append("text")
-                .text(d.properties.cityPopulation + " people")
-        })
-        .on("mouseout", function(d) {
-            d3.select(this).style("stroke", "none");
-            d3.select("#cityName")
-                .select("text").remove();
-            d3.select("#cityPopulation")
-                .select("text").remove();
-        })
-        .attr("d", pathGen);
-		*/
-
 }
 
-requestData7();
+requestData();
 
+
+// this function gets triggered when the user changes the metric via the dropdown menu
+// it then changes the data and recolors the departments of colombia according to the value for that metric
 async function changeData(value) {
 
+    // read data
     const colombiaData = await d3.json("/static/data/colombia_final.geojson");
 
-    const scoreMin = d3.min(colombiaData.features, d => eval(value));
-    const scoreMax = d3.max(colombiaData.features, d => eval(value));
+    // define new color scale
+    var scoreMin = d3.min(colombiaData.features, d => eval(value));
+    var scoreMax = d3.max(colombiaData.features, d => eval(value));
 
-    const newColorScale = d3.scaleSequential([scoreMin, scoreMax], d3.interpolateViridis);
+    var dropdownColor = document.getElementById("dropdownMetric4");
+    var newColorScale = d3.scaleSequential([scoreMin, scoreMax], eval(dropdownColor.options[dropdownColor.selectedIndex].value));
 
     var dropdown = document.getElementById("dropdownMetric");
 
+    // redraw the map with new values
     map.selectAll(".district")
         .style("fill", d => newColorScale(eval(value)))
         .on("mouseover", function(d) {
@@ -126,7 +108,7 @@ async function changeData(value) {
 
 }
 
-
+// this function changes the projection used to display the map
 async function changeProjection(value) {
 
     const colombiaData = await d3.json("/static/data/colombia_final.geojson");
@@ -152,6 +134,8 @@ async function changeProjection(value) {
 }
 
 
+// this function either deletes the cities from the map if the user selects "None"
+// or draws the selected amount of cities
 async function changeCities(value) {
     if (value === "none") {
         map.selectAll(".city").remove();
@@ -161,7 +145,37 @@ async function changeCities(value) {
     }
 }
 
+// this function redraws the map with the from the user selected colorScale
+async function changeColorScale(value) {
 
+    const colombiaData = await d3.json("/static/data/colombia_final.geojson");
+
+    var dropdown = document.getElementById("dropdownMetric");
+
+    var scoreMin = d3.min(colombiaData.features, d => eval(dropdown.options[dropdown.selectedIndex].value));
+    var scoreMax = d3.max(colombiaData.features, d => eval(dropdown.options[dropdown.selectedIndex].value));
+
+    var newColorScale = d3.scaleSequential([scoreMin, scoreMax], eval(value));
+
+    map.selectAll(".district")
+        .style("fill", d => newColorScale(eval(dropdown.options[dropdown.selectedIndex].value)))
+        .on("mouseover", function(d) {
+            d3.select(this).style("stroke", "red");
+            d3.select("#hint")
+                .append("text")
+                .text(eval(dropdown.options[dropdown.selectedIndex].value));
+            d3.select("#dep")
+                .append("text")
+                .text(d.properties.NOMBRE_DPT + ": ")
+            d3.select("#metric")
+                .append("text")
+                .text(dropdown.options[dropdown.selectedIndex].text + " in ")
+        });
+
+
+}
+
+// this is a sorting function used to sort the cities by population
 function comparePopulation(cityA, cityB) {
 
     let comparison = 0;
@@ -175,7 +189,7 @@ function comparePopulation(cityA, cityB) {
     return comparison * -1;
 }
 
-
+// this function draws the selected amount of cities on the map
 function drawCities(value) {
 
     map.append("g")
